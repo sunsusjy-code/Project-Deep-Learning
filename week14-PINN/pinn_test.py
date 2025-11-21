@@ -75,3 +75,5 @@ plt.legend()
 plt.title("PINN for dy/dt = -2y")
 plt.savefig("pinn_result.png") # 保存图片
 print("📊 结果图已保存为 pinn_result.png")
+
+print("Liang shuxuan is handsome")
