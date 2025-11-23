@@ -99,3 +99,35 @@ for i in range(3000): # 训练 3000 次
         print(f"Iter {i}, Total: {total_loss.item():.5f}, PDE: {loss_f.item():.5f}, IC: {loss_ic.item():.5f}, BC: {loss_bc.item():.5f}")
 
 print("✅ 训练完成!")
+
+# --- 5. 可视化结果 (画出漂亮的彩色图) ---
+print("🎨 正在绘制结果...")
+
+# 1. 生成网格 (Grid)
+# 我们把时空切成 100x100 的小方格来画图
+x_vals = np.linspace(-1, 1, 100)
+t_vals = np.linspace(0, 1, 100)
+X, T = np.meshgrid(x_vals, t_vals)
+
+# 2. 准备输入数据
+# 需要把网格拉平，变成 (10000, 2) 的形状喂给模型
+X_flat = torch.tensor(X.flatten()[:, None], dtype=torch.float32).to(device)
+T_flat = torch.tensor(T.flatten()[:, None], dtype=torch.float32).to(device)
+
+# 3. 模型预测
+with torch.no_grad(): # 预测时不需要求导
+    u_pred = model(X_flat, T_flat).cpu().numpy()
+
+# 4. 把预测结果变回网格形状 (100, 100)
+U_pred = u_pred.reshape(100, 100)
+
+# 5. 画图
+plt.figure(figsize=(10, 6))
+# 使用 pcolormesh 画热力图
+plt.pcolormesh(T, X, U_pred, cmap='jet', shading='auto')
+plt.colorbar(label='Velocity u') # 颜色条
+plt.xlabel('Time t')
+plt.ylabel('Position x')
+plt.title("Burgers' Equation Solution (PINN)")
+plt.savefig("burgers_solution.png")
+print("🖼️ 结果已保存为 burgers_solution.png，快去打开看看！")
