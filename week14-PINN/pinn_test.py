@@ -31,7 +31,7 @@ def compute_loss(model, t):
     
     # 物理方程的残差：Residual = dy/dt + 2y
     # 我们希望这个 Residual 越接近 0 越好
-    physics_loss = torch.mean((dy_dt + 2*y)**2)
+    physics_loss = torch.mean((dy_dt + 5*y)**2) #加上平方是为了正负抵消
     
     # --- B. 初始条件损失 (IC Loss) ---
     # 我们希望 t=0 时，y=1
@@ -66,14 +66,13 @@ print("✅ 训练完成！")
 with torch.no_grad(): # 预测时不需要求导
     t_test = torch.linspace(0, 1, 100).view(-1, 1).to(device)
     y_pred = model(t_test).cpu().numpy()
-    y_true = np.exp(-2 * t_test.cpu().numpy()) # 真实解析解
+    y_true = np.exp(-5 * t_test.cpu().numpy()) # 真实解析解
 
 plt.figure(figsize=(8,5))
-plt.plot(t_test.cpu(), y_true, 'k--', label='Exact Solution (e^-2t)')
+plt.plot(t_test.cpu(), y_true, 'k--', label='Exact Solution (e^-5t)')
 plt.plot(t_test.cpu(), y_pred, 'r-', label='PINN Prediction')
 plt.legend()
-plt.title("PINN for dy/dt = -2y")
+plt.title("PINN for dy/dt = -5y")
 plt.savefig("pinn_result.png") # 保存图片
 print("📊 结果图已保存为 pinn_result.png")
 
-print("Liang shuxuan is handsome")
