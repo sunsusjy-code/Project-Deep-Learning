@@ -265,7 +265,10 @@ class experiment(Plain):
         ax = fig.add_subplot(1, 2, 2, projection='3d')
         surf = ax.scatter(self.xx, self.yy, self.u_test, c=self.u_test, cmap='plasma')
         fig.colorbar(surf, shrink=0.5, aspect=5)
-        plt.show()
+        # 将原本第 269 行的 plt.show() 替换为：
+        plt.savefig('elliptic_3d_comparison.png', dpi=300) # 保存为高清图
+        # plt.show() # 这一行注释掉，或者直接删掉
+        print("3D 对比图已保存为 elliptic_3d_comparison.png")
         # set up a figure twice as wide as it is tall
         fig = plt.figure(figsize=plt.figaspect(0.3))
 
